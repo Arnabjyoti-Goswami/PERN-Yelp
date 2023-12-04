@@ -20,6 +20,10 @@ const updateRestaurant = async (req, res, next) => {
     const results = await db.query(query, queryParams);
     const restaurant = results.rows[0];
 
+    if (!restaurant) {
+      return next(errorHandler(404, 'Restaurant with this ID does not exist!'));
+    }
+    
     res.status(201).json({
       success: true,
       data: {
