@@ -13,7 +13,7 @@ const getRestaurant = async (req, res, next) => {
     const restaurant = results.rows[0];
 
     res.status(200).json({
-      status: 'success',
+      success: true,
       data: {
         restaurant: restaurant,
       },
