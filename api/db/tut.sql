@@ -15,35 +15,35 @@
 -- see info about a specific table   
 -- \d table_name
 
--- Make the database and the table using the psql CLI commands in the db.sql file before the following commands:
+-- Make a test database and a table using similar commands as in the db.sql file before testing the following commands:
 
 -- Altering table column type for a single column
--- ALTER TABLE table_name
--- ALTER COLUMN column_name1 TYPE new_data_type;
+ALTER TABLE table_name
+ALTER COLUMN column_name1 TYPE new_data_type;
 
 -- Altering table column type for multiple columns
--- ALTER TABLE table_name
--- ALTER COLUMN column_name1 TYPE new_data_type,
--- ALTER COLUMN column_name2 TYPE new_data_type,
--- ...;
+ALTER TABLE table_name
+ALTER COLUMN column_name1 TYPE new_data_type,
+ALTER COLUMN column_name2 TYPE new_data_type,
+...;
 
 -- Note about postgresqltutorial.com:
 -- The SET DATA TYPE and TYPE are equivalent
 -- hence [SET DATA] TYPE is written in postgresqltutorial.com
 
 -- Altering table column name for a single column
--- ALTER TABLE table_name 
--- RENAME COLUMN column_name TO new_column_name;
+ALTER TABLE table_name 
+RENAME COLUMN column_name TO new_column_name;
 
 -- Adding a new column to a table
-ALTER TABLE products
+ALTER TABLE table_name
 ADD COLUMN featured BOOLEAN;
 
 -- Dropping a column from a table
-ALTER TABLE products
+ALTER TABLE table_name
 DROP COLUMN featured;
 
--- Better than altering columns is to drop the table and remake it from scratch by changing few words in the create table query
+-- If you want simplicity, better than altering columns, which is what is done in all of the above commands, is to drop the table and remake it from scratch by changing few words in the create table query.
 DROP TABLE restaurants;
 
 -- Selecting all columns from the table

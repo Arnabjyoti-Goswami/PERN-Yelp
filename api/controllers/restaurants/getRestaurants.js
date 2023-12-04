@@ -2,9 +2,10 @@ import db from '../../db/connectDB.js';
 
 const getRestaurants = async (req, res, next) => {
   try {
-    const results = await db.query(`
+    const query = `
     SELECT * FROM restaurants
-    ;`);
+    ;`;
+    const results = await db.query(query);
     const numResults = results.rowCount;
     const queryRows = results.rows;
 
