@@ -15,12 +15,25 @@
 -- see info about a specific table   
 -- \d table_name
 
-CREATE TABLE products (
-  id INT,
-  name VARCHAR(50),
-  price INT,
-  on_sale BOOLEAN
-);
+-- Make the database and the table using the psql CLI commands in the db.sql file before the following commands:
+
+-- Altering table column type for a single column
+-- ALTER TABLE table_name
+-- ALTER COLUMN column_name1 TYPE new_data_type;
+
+-- Altering table column type for multiple columns
+-- ALTER TABLE table_name
+-- ALTER COLUMN column_name1 TYPE new_data_type,
+-- ALTER COLUMN column_name2 TYPE new_data_type,
+-- ...;
+
+-- Note about postgresqltutorial.com:
+-- The SET DATA TYPE and TYPE are equivalent
+-- hence [SET DATA] TYPE is written in postgresqltutorial.com
+
+-- Altering table column name for a single column
+-- ALTER TABLE table_name 
+-- RENAME COLUMN column_name TO new_column_name;
 
 -- Adding a new column to a table
 ALTER TABLE products
@@ -30,3 +43,11 @@ ADD COLUMN featured BOOLEAN;
 ALTER TABLE products
 DROP COLUMN featured;
 
+-- Better than altering columns is to drop the table and remake it from scratch by changing few words in the create table query
+DROP TABLE restaurants;
+
+-- Selecting all columns from the table
+SELECT * FROM restaurants;
+
+-- Selecting specific columns from the table
+SELECT name, price_range FROM restaurants;
