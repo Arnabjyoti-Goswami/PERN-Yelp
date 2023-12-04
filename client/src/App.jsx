@@ -13,7 +13,7 @@ import {
 
 const App = () => {
   return (
-    <body className='m-0 h-screen w-screen'>
+    <div className='m-0 h-screen w-screen bg-slate-100'>
       <Router>
         <Routes>
           <Route exact path='/' element={<Home />} />
@@ -22,7 +22,7 @@ const App = () => {
           <Route path='/*' element={<PageNotFound />} />
         </Routes>
       </Router> 
-    </body>
+    </div>
   );
 };
 
