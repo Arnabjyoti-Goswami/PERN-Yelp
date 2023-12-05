@@ -8,14 +8,8 @@ const TableBody = () => {
 
   const [restaurants, setRestaurants] = useState([]);
 
-  const fetchUrl = 'api/v1/restaurants';
-  const fetchOptions = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-  const { response, error, isFetching, refetch } = useFetch(fetchUrl, fetchOptions);
+  const fetchUrl = '/api/v1/restaurants';
+  const { response, error, isFetching, refetch } = useFetch(fetchUrl);
 
   useEffect(() => {
     if (response) {
@@ -24,7 +18,7 @@ const TableBody = () => {
   }, [response]);
 
   const handleRestaurantClick = (restaurantId) => {
-    navigate(`/restaurants/${restaurantId}`);
+    navigate(`/restaurant/${restaurantId}`);
   };
 
   return restaurants.map((restaurant) => {

@@ -5,17 +5,10 @@ import useFetch from '../hooks/useFetch.js';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
-
   const [restaurant, setRestaurant] = useState({});
-
-  const fetchUrl = `api/v1/restaurants/${id}`;
-  const fetchOptions = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-  const { response, error, isFetching, refetch } = useFetch(fetchUrl, fetchOptions);
+  
+  const fetchUrl = `/api/v1/restaurants/${id}`;
+  const { response, error, isFetching, refetch } = useFetch(fetchUrl);
 
   useEffect(() => {
     if (response) {
