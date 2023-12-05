@@ -5,8 +5,9 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "migrate": "node db/migrate.js",
     "dev": "nodemon app.js",
-    "start": "node api/app.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
