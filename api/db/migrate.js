@@ -50,25 +50,20 @@ const createTable = async () => {
 
 const insertData = async () => {
   try {
-    const query1 = 
+    const query = 
     `
-      INSERT INTO restaurants (name, location, price_range)
-      VALUES ($1, $2, $3)
+      INSERT INTO restaurants 
+        (name, location, price_range)
+      VALUES 
+        ($1, $2, $3), 
+        ($4, $5, $6)
       RETURNING *;
     `;
     const params1 = ['Sushi Place', 'Tokyo', 3];
-    const result1 = await db.query(query1, params1);
-
-    const query2 = 
-    `
-      INSERT INTO restaurants (name, location, price_range)
-      VALUES ($1, $2, $3)
-      RETURNING *;
-    `;
-    const params2 = ['Pizza Place', 'New York', 2];
-    const result2 = await db.query(query2, params2);
-
-    if (result1.rows[0] && result2.rows[0]) {
+    const params2 = ['Burger King', 'New York', 1];
+    const params = [...params1, ...params2];
+    const result = await db.query(query, params);
+    if (result.rows[0]) {
       console.log('Data inserted successfully!');
     }
 
