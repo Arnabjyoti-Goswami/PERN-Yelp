@@ -5,39 +5,54 @@ import useFetch from '../hooks/useFetch.js';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
+
   const [restaurant, setRestaurant] = useState({});
-  
-  const fetchUrl = `/api/v1/restaurants/${id}`;
-  const { response, error, isFetching, refetch } = useFetch(fetchUrl);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchRestaurant = async () => {
+    setIsLoading(true);
+    try {
+      const fetchUrl = `/api/v1/restaurants/${id}`;
+      const fetchData = useFetch(fetchUrl);
+      const response = await fetchData();
+      setRestaurant(response.data.restaurant);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (response) {
-      setRestaurant(response.data.restaurant);
-    }
-  }, [response]);
+    fetchRestaurant();
+  }, []);
 
   let returnMessage;
-  if (isFetching || response === null) {
+  if (isLoading) {
     returnMessage =
-      <div className='text-slate-800 text-5xl text-center
-      pt-20'>
-        Loading...
-      </div>;
+    <div className='text-slate-800 text-5xl text-center
+    pt-20'>
+      Loading...
+    </div>;
   } else if (error) {
     returnMessage =
-      <div className='text-red-800 text-5xl text-center
-      pt-20'>
-        Error: {error}
-      </div>;
+    <div className='text-red-800 text-5xl text-center
+    pt-20'>
+      Error: {error}
+    </div>;
   }
 
   return (
     <>
-    {restaurant && (
+    {
+    restaurant && (
       <div>
         <span>{restaurant.name}</span>
       </div>
-    ) }
+    ) 
+    }
+
     {returnMessage}
     </>
   );
