@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
+import { CiLocationOn } from 'react-icons/ci';
+
 import useFetch from '../hooks/useFetch.js';
 
 const RestaurantDetails = () => {
@@ -47,8 +49,22 @@ const RestaurantDetails = () => {
     <>
     {
     restaurant && (
-      <div>
-        <span>{restaurant.name}</span>
+      <div className='flex flex-col justify-center'>
+        <div className='flex justify-center 
+        text-slate-800 text-center
+        pt-10 gap-10'>
+          <div className='text-5xl'>
+            {restaurant.name}
+          </div>
+          <div className='text-3xl
+          flex items-center'>
+            <CiLocationOn className='mr-2' />
+            {restaurant.location}
+          </div>
+        </div>
+        <div>
+          
+        </div>
       </div>
     ) 
     }

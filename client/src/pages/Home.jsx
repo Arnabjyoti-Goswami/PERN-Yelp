@@ -8,7 +8,7 @@ import {
 
 import useFetch from '../hooks/useFetch.js';
 
-const TableBody = () => {
+const TableBody = ({ restaurantAdded }) => {
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
@@ -29,12 +29,40 @@ const TableBody = () => {
   useEffect(() => {
     fetchAllRestaurants();
   }, []);
+  
+  useEffect(() => {
+    if (restaurantAdded) {
+      setRestaurants(prevRestaurants => [...prevRestaurants, restaurantAdded]);
+    }
+  }, [restaurantAdded]);
 
   const handleRestaurantClick = (id) => {
     navigate(`/restaurant/${id}`);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const fetchUrl = `/api/v1/restaurants/${id}`;
+      const fetchOptions = {
+        method: 'DELETE',
+      };
+      const fetchData = useFetch(fetchUrl, fetchOptions);
+      const response = await fetchData();
+      console.log(response);
+
+      const updatedRestaurants = restaurants.filter((restaurant) => restaurant.id !== id);
+      setRestaurants(updatedRestaurants);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleUpdate = (id) => {
+    
+  };
+
   return (
+    restaurants.length !== 0 &&
     <tbody>
       {restaurants.map((restaurant) => (
         <tr key={restaurant.id} className='text-center hover:bg-blue-300 transition duration-300 ease-in-out hover:bg-opacity-30 '>
@@ -53,13 +81,13 @@ const TableBody = () => {
           </td>
           <td className='py-4 pr-5 flex justify-center space-x-2'>
             <button className='rounded-full w-10 h-10 bg-yellow-200 hover:bg-yellow-300 flex items-center justify-center
-            btn
-            '>
+            btn'
+            onClick={() => handleUpdate(restaurant.id)}>
               <EditTwoTone twoToneColor='#ebd831' style={{ fontSize: '1.5em' }} />
             </button>
             <button className='rounded-full w-10 h-10 bg-red-400 hover:bg-red-500 flex items-center justify-center
-            btn
-            '>
+            btn'
+            onClick={() => handleDelete(restaurant.id)}>
               <DeleteTwoTone twoToneColor='#b81212' style={{ fontSize: '1.5em' }} />
             </button>
           </td>
@@ -70,8 +98,41 @@ const TableBody = () => {
 };
 
 const Home = () => {
-  const handleAddRestaurant = () => {
+  const [formData, setFormData] = useState({});
+  
+  const [newRestaurant, setNewRestaurant] = useState({});
 
+  const handleChange = (e) => {
+    e.preventDefault();
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.location || !formData.price_range) {
+      return;
+    }
+
+    try {
+      const fetchUrl = '/api/v1/restaurants';
+      const fetchOptions = {
+        method: 'POST',
+        body: {
+          name: formData.name,
+          location: formData.location,
+          price_range: formData.price_range,
+        },
+      };
+      const fetchData = useFetch(fetchUrl, fetchOptions);
+      const response = await fetchData();
+      setNewRestaurant(response.data.restaurant);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -79,20 +140,65 @@ const Home = () => {
       <div className='text-gray-700 font-medium text-5xl text-center mb-10'>
         Restaurants
       </div>
-      <button
-      onClick={handleAddRestaurant}
-      className='
-      w-12 h-12
-      flex items-center justify-center
-      rounded-full bg-green-500 bg-opacity-70 hover:bg-opacity-100 cursor-pointer 
-      absolute top-[10%] right-[10%]
-      btn
-      text-white text-4xl
-      '>
-        <span>
-          +
-        </span>
-      </button>
+      <form className='flex items-center mb-4
+      justify-between w-[80%]'
+      onSubmit={handleSubmit}>
+        <input
+        type='text'
+        placeholder='Restaurant Name'
+        className='p-2 rounded border-slate-300 w-[40%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
+        id='name'
+        onChange={handleChange}
+        />
+        <input
+        type='text'
+        placeholder='Location'
+        className='p-2 rounded border-slate-300 w-[40%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
+        id='location'
+        onChange={handleChange}
+        />
+        <select
+        className='p-2 rounded border-slate-300 w-[10%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
+        id='price_range'
+        onChange={handleChange}
+        defaultValue='0'
+        >
+          <option value='0' disabled>
+            Price Range
+          </option>
+          <option value='1'>
+            $
+          </option>
+          <option value='2'>
+            $$
+          </option>
+          <option value='3'>
+            $$$
+          </option>
+          <option value='4'>
+            $$$$
+          </option>
+          <option value='5'>
+            $$$$$
+          </option>
+        </select>
+        <button
+        className='
+        w-12 h-12 cursor-pointer
+        flex items-center justify-center
+        rounded-full bg-green-500 bg-opacity-70 hover:bg-opacity-100 
+        btn
+        text-white text-4xl
+        '
+        type='submit'>
+          <span>
+            +
+          </span>
+        </button>
+      </form>
       <div className='max-w-[80%] w-full overflow-x-auto'>
         <table className='w-full bg-gray-800 text-white table-auto'>
           <thead className='bg-gray-700
@@ -115,7 +221,7 @@ const Home = () => {
               </th>
             </tr>
           </thead>
-          <TableBody />
+          <TableBody restaurantAdded={newRestaurant} />
         </table>
       </div>
     </div>
