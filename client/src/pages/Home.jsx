@@ -8,6 +8,8 @@ import {
 
 import useFetch from '../hooks/useFetch.js';
 
+import StarRating from '../components/StarRating.jsx';
+
 const TableBody = ({ restaurantAdded }) => {
   const navigate = useNavigate();
 
@@ -76,7 +78,7 @@ const TableBody = ({ restaurantAdded }) => {
             {restaurant.price_range}
           </td>
           <td className='py-4'>
-            reviews
+            <StarRating rating={2.4} />
           </td>
           <td className='py-4 pr-5 flex justify-center space-x-2'>
             <button className='rounded-full w-10 h-10 bg-yellow-200 hover:bg-yellow-300 flex items-center justify-center

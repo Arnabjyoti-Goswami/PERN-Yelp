@@ -13,7 +13,8 @@ import {
 
 const App = () => {
   return (
-    <div className='m-0 h-screen w-screen bg-slate-100'>
+    <div className='m-0 h-screen w-screen 
+    bg-slate-100 bg-opacity-20'>
       <Router>
         <Routes>
           <Route exact path='/' element={<Home />} />

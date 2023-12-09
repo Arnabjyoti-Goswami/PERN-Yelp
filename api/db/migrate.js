@@ -15,14 +15,33 @@ const checkTableExists = async () => {
 
     const result = await db.query(tableExistsQuery);
     const tableExists = result.rows[0].exists;
-    console.log('Table exists:', tableExists);
     return tableExists;
 
   } catch (error) {
-    console.error('Error checking table existence:', error);
+    console.log('Error checking restaurants table existence:', error);
     return;
   }
-}
+};
+
+const checkReviewsTableExists = async () => {
+  try {
+    const tableExistsQuery = `
+      SELECT EXISTS (
+        SELECT 1
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+        AND table_name = 'reviews'
+      );
+    `;
+
+    const result = await db.query(tableExistsQuery);
+    const tableExists = result.rows[0].exists;
+    return tableExists;
+  } catch (error) {
+    console.log('Error checking reviews table existence:', error);
+    return;
+  }
+};
 
 const createTable = async () => {
   try {
@@ -39,14 +58,37 @@ const createTable = async () => {
     `;
     const result = await db.query(query);
     const tableCreated = (result.command === 'CREATE');
-    console.log('Table creation query result', tableCreated);
     return tableCreated;
 
   } catch (error) {
-    console.error('Error creating table:', error);
+    console.log('Error creating restaurants table:', error);
     return;
   }
 }
+
+const createReviewsTable = async () => {
+  try {
+    const query = 
+    `
+      CREATE TABLE reviews (
+        id BIGSERIAL NOT NULL PRIMARY KEY,
+        restaurant_id BIGINT NOT NULL REFERENCES restaurants(id),
+        name VARCHAR(50) NOT NULL,
+        review TEXT NOT NULL,
+        rating INT NOT NULL CHECK(rating >= 1 AND rating <= 5),
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+    `;
+    const result = await db.query(query);
+    const tableCreated = (result.command === 'CREATE');
+    return tableCreated;
+
+  } catch (error) {
+    console.log('Error creating reviews table:', error);
+    return;
+  }
+};
 
 const insertData = async () => {
   try {
@@ -75,7 +117,7 @@ const insertData = async () => {
 const mainFunc = async () => {
   const tableExists = await checkTableExists();
   if (tableExists) {
-    console.log('Table already exists!');
+    console.log('Restaurants table already exists!');
     return;
   } 
 
@@ -84,7 +126,18 @@ const mainFunc = async () => {
     console.log("Table 'restaurants' created successfully!");
   }
   
-  insertData();
+  await insertData();
+
+  const reviewsTableExists = await checkReviewsTableExists();
+  if (reviewsTableExists) {
+    console.log('Reviews table already exists!');
+    return;
+  }
+
+  const reviewsTableCreated = await createReviewsTable();
+  if (reviewsTableCreated) {
+    console.log("Table 'reviews' created successfully!");
+  }
 
   return;
 }

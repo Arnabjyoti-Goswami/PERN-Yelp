@@ -17,3 +17,11 @@ VALUES ('mcdonalds', 'New York', 4);
 INSERT INTO restaurants
 (name, location, price_range)
 VALUES ('burger king', 'New York', 3);
+
+CREATE TABLE reviews (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  restaurant_id BIGINT NOT NULL REFERENCES restaurants(id),
+  name VARCHAR(50) NOT NULL,
+  review TEXT NOT NULL,
+  rating INT NOT NULL CHECK(rating >= 1 AND rating <= 5),
+);
