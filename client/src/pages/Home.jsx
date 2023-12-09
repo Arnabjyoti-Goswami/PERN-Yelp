@@ -78,7 +78,12 @@ const TableBody = ({ restaurantAdded }) => {
             {restaurant.price_range}
           </td>
           <td className='py-4'>
-            <StarRating rating={2.4} />
+            <div className='flex'>
+              <StarRating rating={restaurant.avg_rating} />
+              <span className='mx-[2px] text-yellow-300'>
+                ({restaurant.num_reviews})
+              </span>
+            </div>
           </td>
           <td className='py-4 pr-5 flex justify-center space-x-2'>
             <button className='rounded-full w-10 h-10 bg-yellow-200 hover:bg-yellow-300 flex items-center justify-center
@@ -130,7 +135,10 @@ const Home = () => {
       };
       const fetchData = useFetch(fetchUrl, fetchOptions);
       const response = await fetchData();
-      setNewRestaurant(response.data.restaurant);
+      const newRestau = response.data.restaurant;
+      response.data.restaurant.avg_rating = 0;
+      response.data.restaurant.num_reviews = 0;
+      setNewRestaurant(newRestau);
     } catch (error) {
       setError(error.message);
     }

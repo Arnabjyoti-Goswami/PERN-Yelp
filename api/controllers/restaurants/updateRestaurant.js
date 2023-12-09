@@ -11,10 +11,10 @@ const updateRestaurant = async (req, res, next) => {
 
   try {
     const query = `
-    UPDATE restaurants
-    SET name = $2, location = $3, price_range = $4, updated_at = NOW()
-    WHERE id = $1
-    RETURNING *
+      UPDATE restaurants
+      SET name = $2, location = $3, price_range = $4, updated_at = NOW()
+      WHERE id = $1
+      RETURNING *
     ;`;
     const queryParams = [restaurantId, name, location, price_range];
     const results = await db.query(query, queryParams);
