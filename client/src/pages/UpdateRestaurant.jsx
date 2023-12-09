@@ -1,76 +1,169 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import useFetch from '../hooks/useFetch';
+import { useEffect, useState } from 'react';
+
+import { CheckOutlined } from '@ant-design/icons';
+import { CiLocationOn } from 'react-icons/ci';
+
+import useFetch from '../hooks/useFetch.js';
 
 const UpdateRestaurant = () => {
   const { id } = useParams();
+
+  const [restaurant, setRestaurant] = useState({});
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({});
-  
-  const handleSubmit = (e) => {
+
+  const fetchRestaurant = async () => {
+    setIsLoading(true);
+    try {
+      const fetchUrl = `/api/v1/restaurants/${id}`;
+      const fetchData = useFetch(fetchUrl);
+      const response = await fetchData();
+      setRestaurant(response.data.restaurant);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRestaurant();
+  }, []);
+
+  let returnMessage;
+  if (isLoading) {
+    returnMessage =
+    <div className='text-slate-800 text-5xl text-center
+    pt-20'>
+      Loading...
+    </div>;
+  } else if (error) {
+    returnMessage =
+    <div className='text-red-800 text-5xl text-center
+    pt-20'>
+      Error: {error}
+    </div>;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.priceRange < 1 || formData.priceRange > 5) {
-      setError('Price range must be between 1 and 5');
+
+    if (!formData.name || !formData.location || !formData.price_range) {
       return;
     }
 
-    if (!formData.location || !formData.name || !formData.priceRange) {
-      setError('Please fill out all fields');
-      return;
+    try {
+      const fetchUrl = `/api/v1/restaurants/${id}`;
+      const fetchOptions = {
+        method: 'PUT',
+        body: {
+          name: formData.name,
+          location: formData.location,
+          price_range: formData.price_range,
+        },
+      };
+      const fetchData = useFetch(fetchUrl, fetchOptions);
+      const response = await fetchData();
+      setRestaurant(response.data.restaurant);
+    } catch (error) {
+      setError(error.message);
     }
-
-    const fetchOptions = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        location: formData.location,
-        price_range: formData.priceRange,
-      }),
-    };
-
-    const fetchUrl = `api/v1/restaurants/${id}`;
-
-    const { response, error, isFetching } = useFetch(fetchUrl, fetchOptions);
-
-    console.log(response);
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    e.preventDefault();
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [e.target.id]: e.target.value,
-    });
+    }));
   };
-
+  
   return (
-    <div className='mb-4'>
-      <form onSubmit={handleSubmit}
-      className='max-w-[1000px]'>
-        <input type='text' 
-        required
+    <>
+    {
+    restaurant ? (
+    <div className='h-full w-full flex flex-col items-center justify-start pt-10 relative'>
+      <div className='flex justify-center 
+        text-slate-800 text-center
+        pt-10 gap-10 mb-10'>
+          <div className='text-5xl'>
+            {restaurant.name}
+          </div>
+          <div className='text-3xl
+          flex items-center'>
+            <CiLocationOn className='mr-2' />
+            {restaurant.location}
+          </div>
+          <div className='text-3xl flex items-center'>
+            Price Range: {restaurant.price_range}
+          </div>
+      </div>
+      <form className='flex items-center mb-4
+      justify-between w-[80%]'
+      onSubmit={handleSubmit}>
+        <input
+        type='text'
+        defaultValue={restaurant.name}
+        placeholder='Restaurant Name'
+        className='p-2 rounded border-slate-300 w-[40%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
         id='name'
-        value={formData.name}
         onChange={handleChange}
         />
-        <input type='text' 
-        required
+        <input
+        type='text'
+        defaultValue={restaurant.location}
+        placeholder='Location'
+        className='p-2 rounded border-slate-300 w-[40%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
         id='location'
-        value={formData.location}
         onChange={handleChange}
         />
-        <input type='number' 
-        max={5}
-        min={1}
-        required
-        id='priceRange'
+        <select
+        className='p-2 rounded border-slate-300 w-[10%] border-2
+        focus:outline-none focus:border-slate-700 focus:border-2'
+        id='price_range'
         onChange={handleChange}
-        value={formData.priceRange}
-        />
+        defaultValue='0'
+        >
+          <option value='0' disabled>
+            Price Range ({restaurant.price_range})
+          </option>
+          <option value='1'>
+            $
+          </option>
+          <option value='2'>
+            $$
+          </option>
+          <option value='3'>
+            $$$
+          </option>
+          <option value='4'>
+            $$$$
+          </option>
+          <option value='5'>
+            $$$$$
+          </option>
+        </select>
+        <button
+        className='
+        w-12 h-12 cursor-pointer
+        flex items-center justify-center
+        rounded-full bg-green-500 bg-opacity-70 hover:bg-opacity-100 
+        btn
+        text-white text-4xl
+        '
+        type='submit'>
+          <CheckOutlined  style={{ fontSize: '0.8em' }} />
+        </button>
       </form>
     </div>
+    ) : 
+    returnMessage
+    }
+    </>
   );
 };
 

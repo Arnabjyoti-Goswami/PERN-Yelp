@@ -48,7 +48,6 @@ const TableBody = ({ restaurantAdded }) => {
       };
       const fetchData = useFetch(fetchUrl, fetchOptions);
       const response = await fetchData();
-      console.log(response);
 
       const updatedRestaurants = restaurants.filter((restaurant) => restaurant.id !== id);
       setRestaurants(updatedRestaurants);
@@ -58,7 +57,7 @@ const TableBody = ({ restaurantAdded }) => {
   };
 
   const handleUpdate = (id) => {
-    
+    navigate(`/restaurant/${id}/update`);
   };
 
   return (
