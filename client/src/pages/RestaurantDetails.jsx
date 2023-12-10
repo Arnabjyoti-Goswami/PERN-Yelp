@@ -45,7 +45,7 @@ const AddReview = ({ setNewReview }) => {
     <div className='flex justify-between items-center
     mx-[10vw]'>
       <form onSubmit={handleSubmit}>
-        <div className='flex justify-between gap-x-[50vw]'>
+        <div className='flex justify-between gap-x-[25vw] sm:gap-x-[50vw]'>
           <div className='flex flex-col'>
             <label htmlFor='username'>
               Name
@@ -222,7 +222,8 @@ const RestaurantDetails = () => {
     <>
     {
     restaurant && (
-      <div className='flex flex-col justify-center'>
+      <div className='flex flex-col justify-center
+      overflow-x-hidden'>
         <div className='flex justify-center 
         text-slate-800 text-center
         pt-10 gap-10 mb-5'>

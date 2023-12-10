@@ -145,7 +145,8 @@ const Home = () => {
   };
 
   return (
-    <div className='h-full w-full flex flex-col items-center justify-start pt-10 relative'>
+    <div className='h-full w-full flex flex-col items-center justify-start pt-10 relative
+    overflow-y-scroll py-10'>
       <div className='text-gray-700 font-medium text-5xl text-center mb-10'>
         Restaurants
       </div>
@@ -169,7 +170,8 @@ const Home = () => {
         onChange={handleChange}
         />
         <select
-        className='p-2 rounded border-slate-300 w-[10%] border-2
+        className='px-1 py-2 rounded border-slate-300 
+        w-[10%] text-center border-2
         focus:outline-none focus:border-slate-700 focus:border-2'
         id='price_range'
         onChange={handleChange}
@@ -208,7 +210,8 @@ const Home = () => {
           </span>
         </button>
       </form>
-      <div className='max-w-[80%] w-full overflow-x-auto'>
+      <div className='max-w-[80%] w-full 
+      flex flex-col'>
         <table className='w-full bg-gray-800 text-white table-auto'>
           <thead className='bg-gray-700
           text-center text-gray-200'>
